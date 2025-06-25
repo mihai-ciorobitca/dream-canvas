@@ -22,7 +22,7 @@ client_id = str(uuid.uuid4())
 # Display the server address and client ID for transparency
 print(colored(f"Server Address: {server_address}", "magenta"))
 print(colored(f"Generated Client ID: {client_id}", "magenta"))
-input(colored("Press Enter to continue...", "green"))
+#input(colored("Press Enter to continue...", "green"))
 
 # Queue prompt function
 def queue_prompt(prompt):
@@ -32,13 +32,10 @@ def queue_prompt(prompt):
     
     # Step 5: Queue the prompt and prepare to send it to the ComfyUI server
     print(colored(f"Step 5: Queuing the prompt for client ID {client_id}.", "cyan"))
-    input(colored("Press Enter to view the JSON that will be sent...", "green"))
     
     # Pretty-printed JSON for the prompt
     print(colored("Here's the JSON that will be sent:", "yellow"))
     print(colored(json.dumps(p, indent=4), "blue"))  # Pretty-printed JSON
-    
-    input(colored("Press Enter to continue and send the prompt...", "green"))
     
     return json.loads(urllib.request.urlopen(req).read())
 
@@ -66,7 +63,7 @@ def get_images(ws, prompt):
     last_reported_percentage = 0
     
     print(colored("Step 6: Start listening for progress updates via the WebSocket connection.", "cyan"))
-    input(colored("Press Enter to continue...", "green"))
+    #input(colored("Press Enter to continue...", "green"))
 
     while True:
         out = ws.recv()
@@ -93,7 +90,7 @@ def get_images(ws, prompt):
 
     # Fetch history and images after completion
     print(colored("Step 7: Fetch the history and download the images after execution completes.", "cyan"))
-    input(colored("Press Enter to continue...", "green"))
+    #input(colored("Press Enter to continue...", "green"))
 
     history = get_history(prompt_id)[prompt_id]
     for o in history['outputs']:
@@ -115,7 +112,7 @@ def generate_images(positive_prompt, negative_prompt, steps=25, resolution=(512,
     ws = websocket.WebSocket()
     ws_url = f"ws://{server_address}/ws?clientId={client_id}"
     print(colored(f"Step 3: Establishing WebSocket connection to {ws_url}", "cyan"))
-    input(colored("Press Enter to continue...", "green"))
+    #input(colored("Press Enter to continue...", "green"))
     ws.connect(ws_url)
     
     # Step 4: Load workflow from file and print it
@@ -125,34 +122,34 @@ def generate_images(positive_prompt, negative_prompt, steps=25, resolution=(512,
 
     workflow = json.loads(workflow_data)
     
-    input(colored("Press Enter to view the loaded workflow before customization...", "green"))
+    #input(colored("Press Enter to view the loaded workflow before customization...", "green"))
     
     # Print the loaded workflow before customization
     print(colored("Here's the workflow as it was loaded before customization:", "yellow"))
     print(colored(json.dumps(workflow, indent=4), "blue"))  # Pretty-print the workflow
     
-    input(colored("Press Enter to continue to customization...", "green"))
+    #input(colored("Press Enter to continue to customization...", "green"))
 
     # Customize workflow based on inputs
     print(colored("Step 5: Customizing the workflow with the provided inputs.", "cyan"))
     print(colored(f"Setting positive prompt: {positive_prompt}", "yellow"))
     print(colored(f"Setting negative prompt: {negative_prompt}", "yellow"))
-    workflow["6"]["inputs"]["text"] = positive_prompt
-    workflow["7"]["inputs"]["text"] = negative_prompt
+    workflow["5"]["inputs"]["text"] = positive_prompt
+    workflow["6"]["inputs"]["text"] = negative_prompt
 
-    print(colored(f"Setting steps for generation: {steps}", "yellow"))
-    workflow["3"]["inputs"]["steps"] = steps
+    #print(colored(f"Setting steps for generation: {steps}", "yellow"))
+    #workflow["3"]["inputs"]["steps"] = steps
 
-    print(colored(f"Setting resolution to {resolution[0]}x{resolution[1]}", "yellow"))
-    workflow["5"]["inputs"]["width"] = resolution[0]
-    workflow["5"]["inputs"]["height"] = resolution[1]
+    #print(colored(f"Setting resolution to {resolution[0]}x{resolution[1]}", "yellow"))
+    #workflow["5"]["inputs"]["width"] = resolution[0]
+    #workflow["5"]["inputs"]["height"] = resolution[1]
 
     # Set a random seed for the KSampler node
     seed = random.randint(1, 1000000000)
-    print(colored(f"Setting random seed for generation: {seed}", "yellow"))
-    workflow["3"]["inputs"]["seed"] = seed
+    #print(colored(f"Setting random seed for generation: {seed}", "yellow"))
+    #workflow["3"]["inputs"]["seed"] = seed
     
-    input(colored("Press Enter to continue...", "green"))
+    #input(colored("Press Enter to continue...", "green"))
 
     # Fetch generated images
     images = get_images(ws, workflow)
@@ -160,7 +157,7 @@ def generate_images(positive_prompt, negative_prompt, steps=25, resolution=(512,
     # Step 8: Close WebSocket connection after fetching the images
     print(colored(f"Step 8: Closing WebSocket connection to {ws_url}", "cyan"))
     ws.close()
-    input(colored("Press Enter to continue...", "green"))
+    #input(colored("Press Enter to continue...", "green"))
 
     return images, seed
 
@@ -171,14 +168,15 @@ if __name__ == "__main__":
     negative_prompt = input(colored("Enter the negative prompt: ", "cyan"))
 
     print(colored("Step 2: User inputs the positive and negative prompts for image generation.", "cyan"))
-    input(colored("Press Enter to continue...", "green"))
+    #input(colored("Press Enter to continue...", "green"))
 
     # Call the generate_images function
     images, seed = generate_images(positive_prompt, negative_prompt)
+    print(images)
 
     # Step 9: Save the images
     print(colored("Step 9: Saving the generated images locally.", "cyan"))
-    input(colored("Press Enter to continue...", "green"))
+    #input(colored("Press Enter to continue...", "green"))
     
     for node_id in images:
         for image_data in images[node_id]:
